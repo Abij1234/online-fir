@@ -1,0 +1,304 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+
+/* Section */
+.register-section{
+min-height:90vh;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:40px 15px;
+background:#f5f7fb;
+}
+
+/* Card */
+.register-card{
+background:white;
+padding:35px;
+border-radius:20px;
+box-shadow:0 10px 35px rgba(0,0,0,0.08);
+width:100%;
+max-width:520px;
+animation:fadeUp 0.8s ease;
+}
+
+/* Animation */
+@keyframes fadeUp{
+0%{
+opacity:0;
+transform:translateY(30px);
+}
+100%{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* Title */
+.register-title{
+font-weight:600;
+margin-bottom:25px;
+text-align:center;
+}
+
+/* Inputs */
+.form-control{
+border-radius:12px;
+padding:12px;
+border:1px solid #e0e0e0;
+transition:0.3s;
+}
+
+.form-control:focus{
+box-shadow:none;
+border-color:#0b3d91;
+}
+
+/* Labels */
+label{
+font-weight:500;
+margin-bottom:5px;
+}
+
+/* Button */
+
+.register-btn{
+background:#0b3d91;
+color:white;
+padding:12px;
+border-radius:30px;
+font-weight:600;
+transition:0.3s;
+}
+
+.register-btn:hover{
+background:#062c6a;
+transform:translateY(-2px);
+box-shadow:0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* Divider */
+
+.divider{
+text-align:center;
+margin:20px 0;
+position:relative;
+}
+
+.divider::before{
+content:"";
+position:absolute;
+width:40%;
+height:1px;
+background:#ddd;
+left:0;
+top:50%;
+}
+
+.divider::after{
+content:"";
+position:absolute;
+width:40%;
+height:1px;
+background:#ddd;
+right:0;
+top:50%;
+}
+
+/* Login link */
+
+.login-link a{
+text-decoration:none;
+font-weight:500;
+color:#0b3d91;
+}
+
+.login-link a:hover{
+text-decoration:underline;
+}
+
+
+/* Responsive */
+
+@media(max-width:768px){
+
+.register-card{
+padding:25px;
+}
+
+}
+
+</style>
+
+<div class="register-section">
+
+<div class="register-card">
+
+<h3 class="register-title">
+Create Account
+</h3>
+{% for i in messages %}
+<script>alert("{{i}}")</script>
+{% endfor %}
+
+<form method="POST" onsubmit="return validateForm()">
+
+{% csrf_token %}
+
+<div class="mb-3">
+<label>Full Name</label>
+<input type="text" class="form-control" name="name" id="name" required>
+<small id="name_error" class="text-danger"></small>
+</div>
+
+<div class="mb-3">
+<label>Email</label>
+<input type="email" class="form-control" name="email" id="email" required>
+<small id="email_error" class="text-danger"></small>
+</div>
+
+<div class="mb-3">
+<label>Phone Number</label>
+<input type="text" class="form-control" name="phone" id="phone" required>
+<small id="phone_error" class="text-danger"></small>
+</div>
+
+<div class="mb-3">
+<label>Address</label>
+<textarea class="form-control" name="address"></textarea>
+</div>
+
+<div class="row">
+
+<div class="col-md-6">
+<div class="mb-3">
+<label>City</label>
+<input type="text" class="form-control" name="city">
+</div>
+</div>
+
+<div class="col-md-6">
+<div class="mb-3">
+<label>State</label>
+<input type="text" class="form-control" name="state">
+</div>
+</div>
+
+</div>
+
+<div class="mb-3">
+<label>Password</label>
+<input type="password" class="form-control" name="password" id="password" required>
+<small id="password_error" class="text-danger"></small>
+</div>
+
+<div class="mb-3">
+<label>Confirm Password</label>
+<input type="password" class="form-control" name="confirm_password" id="confirm_password" required>
+<small id="confirm_error" class="text-danger"></small>
+</div>
+
+<button class="btn register-btn w-100">
+Create Account
+</button>
+
+<div class="divider">
+or
+</div>
+<div class="text-center login-link">
+Are you police?
+<a href="{% url "policeregister" %}">police register</a>
+</div>
+<div class="text-center login-link">
+Already have account?
+<a href="{% url "loginn" %}">Login</a>
+</div>
+
+
+</form>
+
+</div>
+
+</div>
+<script>
+
+function validateForm(){
+
+let name = document.getElementById("name").value;
+let email = document.getElementById("email").value;
+let phone = document.getElementById("phone").value;
+let password = document.getElementById("password").value;
+let confirm = document.getElementById("confirm_password").value;
+
+let name_error = document.getElementById("name_error");
+let email_error = document.getElementById("email_error");
+let phone_error = document.getElementById("phone_error");
+let password_error = document.getElementById("password_error");
+let confirm_error = document.getElementById("confirm_error");
+
+name_error.innerHTML="";
+email_error.innerHTML="";
+phone_error.innerHTML="";
+password_error.innerHTML="";
+confirm_error.innerHTML="";
+
+let valid = true;
+
+
+// Name Validation
+
+let namePattern = /^[A-Za-z ]+$/;
+
+if(!namePattern.test(name)){
+name_error.innerHTML = "Name should contain letters only";
+valid = false;
+}
+
+
+// Email Validation
+
+let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+
+if(!emailPattern.test(email)){
+email_error.innerHTML = "Enter valid email";
+valid = false;
+}
+
+
+// Phone Validation
+
+let phonePattern = /^[0-9]{10}$/;
+
+if(!phonePattern.test(phone)){
+phone_error.innerHTML = "Phone must be 10 digits";
+valid = false;
+}
+
+
+// Password Validation
+
+let passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+if(!passwordPattern.test(password)){
+password_error.innerHTML = "Password must be 8 chars, uppercase, lowercase, number & special char";
+valid = false;
+}
+
+
+// Confirm Password
+
+if(password !== confirm){
+confirm_error.innerHTML = "Passwords do not match";
+valid = false;
+}
+
+return valid;
+
+}
+
+</script>
+{% endblock %}

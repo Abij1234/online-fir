@@ -1,0 +1,118 @@
+{% extends "policebase.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<div class="card shadow-lg">
+
+<div class="card-header bg-danger text-white">
+
+<h4>
+🚨 Update SOS Status
+</h4>
+
+</div>
+
+<div class="card-body">
+
+<form method="POST" action="{% url 'updated_sos' soss.id %}">
+
+{% csrf_token %}
+
+<table class="table table-bordered table-striped">
+
+<tr>
+<th width="30%">Name</th>
+<td>{{ soss.name }}</td>
+</tr>
+
+<tr>
+<th>Phone Number</th>
+<td>{{ soss.phone }}</td>
+</tr>
+
+<tr>
+<th>Message</th>
+<td>{{ soss.message }}</td>
+</tr>
+
+<tr>
+<th>Location</th>
+<td>
+
+<a href="https://www.google.com/maps?q={{soss.latitude}},{{soss.longitude}}"
+target="_blank"
+class="btn btn-info btn-sm">
+
+📍 View Location
+
+</a>
+
+</td>
+</tr>
+
+<tr>
+<th>Created Time</th>
+<td>{{ soss.created_at }}</td>
+</tr>
+
+<tr>
+<th>Status</th>
+
+<td>
+
+<select name="status" class="form-control" required>
+
+<option value="">Select Status</option>
+
+{% for i in key %}
+
+<option value="{{i.id}}"
+{% if soss.status.id == i.id %}
+selected
+{% endif %}
+>
+
+{{i.status}}
+
+</option>
+
+{% endfor %}
+
+</select>
+
+</td>
+
+</tr>
+
+</table>
+
+<div class="text-end">
+
+<button type="submit"
+class="btn btn-success">
+
+Update SOS
+
+</button>
+
+<a href="{% url 'sos_list' %}"
+class="btn btn-secondary">
+
+Back
+
+</a>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

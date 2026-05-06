@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+
+.dashboard{
+padding:25px;
+background:#f5f7fb;
+min-height:100vh;
+}
+
+.stat-card{
+border-radius:15px;
+padding:20px;
+color:white;
+box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.blue{background:linear-gradient(45deg,#1e3c72,#2a5298);}
+.green{background:linear-gradient(45deg,#11998e,#38ef7d);}
+.orange{background:linear-gradient(45deg,#ff8008,#ffc837);}
+.purple{background:linear-gradient(45deg,#6a11cb,#2575fc);}
+
+.card{
+border:none;
+border-radius:15px;
+box-shadow:0 8px 25px rgba(0,0,0,0.06);
+}
+
+.table th{
+background:#000;
+color:white;
+}
+
+</style>
+{% if messages %}
+<div class="container mt-3">
+{% for message in messages %}
+<div class="alert alert-{{message.tags}} alert-dismissible fade show">
+{{message}}
+<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{% endfor %}
+</div>
+{% endif %}
+
+
+<div class="dashboard">
+
+<h3 class="mb-4">Admin Dashboard</h3>
+
+<!-- Stats -->
+
+<div class="row mb-4">
+
+<div class="col-md-3 mb-3">
+<div class="stat-card blue">
+<h6>Total Users</h6>
+<h3>{{total_users}}</h3>
+</div>
+</div>
+
+<div class="col-md-3 mb-3">
+<div class="stat-card green">
+<h6>Total Police</h6>
+<h3>{{total_police}}</h3>
+</div>
+</div>
+
+<div class="col-md-3 mb-3">
+<div class="stat-card orange">
+<h6>Total FIR</h6>
+<h3>{{total_fir}}</h3>
+</div>
+</div>
+
+<div class="col-md-3 mb-3">
+<div class="stat-card purple">
+<h6>Total Donations</h6>
+<h3>₹ {{total_donation}}</h3>
+</div>
+</div>
+
+</div>
+
+
+<!-- Police Approval -->
+
+<div class="card p-3 mb-4">
+
+<h5>Pending Police Approval</h5>
+
+<table class="table table-bordered">
+
+<tr>
+<th>Name</th>
+<th>Station</th>
+<th>District</th>
+<th>Action</th>
+</tr>
+
+{% for p in pending_police %}
+<tr>
+<td>{{p.name}}</td>
+<td>{{p.station}}</td>
+<td>{{p.district}}</td>
+<td>
+<a href="{% url 'approve_police' p.id %}" class="btn btn-success btn-sm">Approve</a>
+<a href="{% url 'reject_police' p.id %}" class="btn btn-danger btn-sm">Reject</a>
+</td>
+</tr>
+{% empty %}
+<tr><td colspan="4">No pending requests</td></tr>
+{% endfor %}
+
+</table>
+
+</div>
+
+
+<!-- FIR Section -->
+
+<div class="card p-3 mb-4">
+
+<h5>Recent FIR</h5>
+
+<table class="table table-bordered">
+
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Crime</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+
+{% for f in firs %}
+<tr>
+<td>{{f.id}}</td>
+<td>{{f.name}}</td>
+<td>{{f.crime_type}}</td>
+<td>{{f.status}}</td>
+<td>
+
+<a href="{% url 'admin_detailed_fir' f.id %}" class="btn btn-primary btn-sm">View</a>
+
+{% if f.status == "Pending" %}
+<a href="{% url 'admin_approve_fir' f.id %}" class="btn btn-success btn-sm">Approve</a>
+{% endif %}
+
+<a href="{% url 'admin_close_fir' f.id %}" class="btn btn-danger btn-sm">Close</a>
+
+</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+
+
+<!-- Donation Section -->
+
+<div class="card p-3 mb-4">
+
+<h5>Recent Donations</h5>
+
+<table class="table table-bordered">
+
+<tr>
+<th>Name</th>
+<th>Email</th>
+<th>Amount</th>
+<th>Date</th>
+</tr>
+
+{% for d in donations %}
+<tr>
+<td>{{d.name}}</td>
+<td>{{d.email}}</td>
+<td>₹ {{d.amount}}</td>
+<td>{{d.created_at}}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+
+
+<!-- Users -->
+
+<div class="card p-3">
+
+<h5>Recent Users</h5>
+
+<table class="table table-bordered">
+
+<tr>
+<th>Username</th>
+<th>Email</th>
+</tr>
+
+{% for u in users %}
+<tr>
+<td>{{u.username}}</td>
+<td>{{u.email}}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+
+</div>
+
+{% endblock %}

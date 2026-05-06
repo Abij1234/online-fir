@@ -1,0 +1,186 @@
+{% extends 'policebase.html' %}
+
+{% block content %}
+<style>
+
+.closedcss {
+    opacity: 0.5;
+    filter: blur(1px);
+}
+
+.closedcss a {
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+/* Dashboard cards */
+
+.dashboard-card{
+border-radius:15px;
+padding:20px;
+color:white;
+box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.card-blue{
+background:linear-gradient(45deg,#1e3c72,#2a5298);
+}
+
+.card-green{
+background:linear-gradient(45deg,#11998e,#38ef7d);
+}
+
+.card-orange{
+background:linear-gradient(45deg,#ff8008,#ffc837);
+}
+
+.card-purple{
+background:linear-gradient(45deg,#6a11cb,#2575fc);
+}
+
+</style>
+
+{% if messages %}
+<div class="container mt-3">
+{% for message in messages %}
+<div class="alert alert-{{message.tags}} alert-dismissible fade show">
+{{message}}
+<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{% endfor %}
+</div>
+{% endif %}
+
+<br>
+
+<div class="container mt-4">
+
+<!-- Police Info Card -->
+
+<div class="card shadow p-3 mb-4">
+<h4>Police Dashboard</h4>
+
+<div class="row">
+<div class="col-md-3">
+<strong>Name :</strong> {{ police.name }}
+</div>
+
+<div class="col-md-3">
+<strong>Post :</strong> {{ police.get_post_display }}
+</div>
+
+<div class="col-md-3">
+<strong>Station :</strong> {{ police.station }}
+</div>
+
+<div class="col-md-3">
+<strong>District :</strong> {{ police.district }}
+</div>
+</div>
+
+</div>
+
+
+
+
+
+<!-- FIR Table -->
+
+<div class="card shadow p-3">
+
+<h5>FIR List</h5>
+
+<table class="table table-bordered table-striped">
+
+<thead class="table-dark">
+<tr>
+<th>FIR No</th>
+<th>Name</th>
+<th>Crime</th>
+<th>Priority</th>
+<th>Status</th>
+<th>Assigned</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for i in fir %}
+
+<tr class="{% if i.status == 'Closed' %}closdcss{% endif %}">
+
+<td>{{ i.fir_number }}</td>
+<td>{{ i.name }}</td>
+<td>{{ i.crime_type }}</td>
+<td>{{ i.priority }}</td>
+<td>{{ i.status }}</td>
+
+<td>
+{% if i.assigned_officer %}
+{{ i.assigned_officer.name }}
+{% else %}
+Not Assigned
+{% endif %}
+</td>
+
+<td>
+
+{% if i.status != "Closed" %}
+
+<a href="{% url "detailedfir" i.id %}" 
+class="btn btn-sm btn-primary">
+View
+</a>
+
+{% if police.post == "SI" or police.post == "CI" or police.post == "DySP" or police.post == "SP" %}
+<a href="{% url "assign" i.id %}" 
+class="btn btn-sm btn-warning">
+Assign
+</a>
+{% endif %}
+
+{% if police.post == "Constable" or police.post == "Head Constable" or police.post == "ASI" or police.post == "SI" %}
+<a href="{% url "updatefir" i.id %}" 
+class="btn btn-sm btn-success">
+Update
+</a>
+{% endif %}
+
+{% if police.post == "CI" or police.post == "DySP" or police.post == "SP" %}
+{% if i.status == 'Pending' %}
+<a href="{% url "approvefir" i.id %}" 
+class="btn btn-sm btn-info">
+Approve
+</a>
+{% endif %}
+{% endif %}
+
+{% if police.post == "DySP" or police.post == "SP" %}
+<a href="{% url "closefir" i.id %}" 
+class="btn btn-sm btn-danger">
+Close
+</a>
+{% endif %}
+
+{% else %}
+
+<span class="badge bg-danger">Closed</span>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+<br>
+{% endblock %}

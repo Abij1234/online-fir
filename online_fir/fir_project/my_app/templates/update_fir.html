@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% for i in messages  %}
+<script>alert("{{i}}")</script>
+{% endfor %}
+<div class="container mt-4">
+
+```
+<!-- Page Title -->
+<div class="row">
+    <div class="col-md-12">
+        <h3 class="fw-bold">Update FIR</h3>
+        <hr>
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-lg-8 mx-auto">
+
+        <div class="card shadow-lg border-0">
+
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Update FIR Status</h5>
+            </div>
+
+            <div class="card-body">
+
+                <!-- FIR Details -->
+
+                <div class="alert alert-info">
+
+                    <h6>FIR Details</h6>
+
+                    <p><strong>FIR Number :</strong> {{fir.fir_number}}</p>
+                    <p><strong>Category :</strong> {{fir.category}}</p>
+                    <p><strong>Current Status :</strong> {{fir.status}}</p>
+
+                </div>
+
+
+                <!-- Update Form -->
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+                    <!-- Status -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label fw-bold">
+                            Select Status
+                        </label>
+
+                        <select name="status" class="form-control" required>
+
+                            <option value="">Choose Status</option>
+
+                            {% for i in status_choices %}
+
+                            <option value="{{i.0}}">
+                                {{i.1}}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Note -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label fw-bold">
+                            Investigation Note
+                        </label>
+
+                        <textarea name="note"
+                                  class="form-control"
+                                  rows="4"
+                                  placeholder="Enter investigation update..."
+                                  required></textarea>
+
+                    </div>
+
+
+                    <div class="d-flex justify-content-between">
+
+                        <a href="{% url 'policedashboard' %}"
+                           class="btn btn-secondary">
+                            Back
+                        </a>
+
+                        <button type="submit"
+                                class="btn btn-success">
+
+                            Update FIR
+
+                        </button>
+
+                    </div>
+
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+```
+
+</div>
+
+{% endblock %}

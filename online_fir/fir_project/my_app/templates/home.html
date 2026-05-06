@@ -1,0 +1,323 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<!-- AOS Animation -->
+<link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+<style>
+
+/* Hero Section */
+.hero-section{
+    background: linear-gradient(rgba(11,61,145,0.8),rgba(11,61,145,0.8)),
+    url("https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?q=80&w=1974&auto=format&fit=crop");
+    background-size:cover;
+    background-position:center;
+    padding:120px 0;
+    color:white;
+    border-radius:15px;
+}
+
+/* Hero Text */
+.hero-title{
+    font-size:48px;
+    font-weight:700;
+}
+
+/* Buttons */
+.hero-btn{
+    padding:12px 25px;
+    border-radius:30px;
+    font-weight:600;
+}
+
+/* Service Cards */
+.service-card{
+    border:none;
+    border-radius:15px;
+    transition:0.4s;
+}
+
+.service-card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 15px 35px rgba(0,0,0,0.2);
+}
+
+/* Icon */
+.service-icon{
+    font-size:40px;
+    color:#0b3d91;
+}
+
+/* Image hover */
+.img-hover{
+    overflow:hidden;
+    border-radius:15px;
+}
+
+.img-hover img{
+    transition:0.4s;
+}
+
+.img-hover:hover img{
+    transform:scale(1.1);
+}
+
+/* Feature Box */
+.feature-box{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    transition:0.3s;
+}
+
+.feature-box:hover{
+    transform:scale(1.05);
+    box-shadow:0 10px 20px rgba(0,0,0,0.15);
+}
+
+/* Emergency */
+.emergency{
+    background:#dc3545;
+    color:white;
+    padding:40px;
+    border-radius:15px;
+    margin-bottom:100px;
+    transition: all 0.3s ease;
+}
+
+.emergency:hover{
+    transform: translateY(-8px);
+    box-shadow:0 15px 30px rgba(0,0,0,0.3);
+}
+
+/* About links */
+.links li{
+    transition: all 0.3s ease;
+}
+
+.links li:hover{
+    color:#0b3d91;
+    transform:translateX(8px);
+}
+
+/* Responsive */
+
+@media(max-width:768px){
+
+.hero-title{
+    font-size:30px;
+}
+
+}
+
+</style>
+{% if messages %}
+<div class="container mt-3">
+{% for message in messages %}
+<div class="alert alert-{{message.tags}} alert-dismissible fade show">
+{{message}}
+<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{% endfor %}
+</div>
+{% endif %}
+<br>
+<!-- HERO SECTION -->
+<div class="hero-section text-center" data-aos="zoom-out" data-aos-duration="1200">
+
+<div class="container">
+
+<h1 class="hero-title" data-aos="fade-up" data-aos-delay="200">
+Online FIR & Emergency Alert System
+</h1>
+
+<p data-aos="fade-up" data-aos-delay="400">
+File FIR online, track complaints and send emergency SOS alerts instantly
+</p>
+
+<div class="mt-4" data-aos="fade-up" data-aos-delay="600">
+
+<a href="#" class="btn btn-warning hero-btn me-2">
+File FIR
+</a>
+
+<a href="#" class="btn btn-danger hero-btn" >
+Emergency SOS
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- SERVICES -->
+<div class="mt-5">
+
+<h2 class="text-center mb-4" data-aos="fade-down">
+Our Services
+</h2>
+
+<div class="row">
+
+<div class="col-md-3" data-aos="fade-up" data-aos-delay="100">
+<div class="card service-card text-center p-4">
+
+<div class="service-icon mb-3">
+<i class="fa fa-file"></i>
+</div>
+
+<h5>File FIR</h5>
+<p>Register FIR online easily</p>
+
+</div>
+</div>
+
+<div class="col-md-3" data-aos="fade-up" data-aos-delay="200">
+<div class="card service-card text-center p-4">
+
+<div class="service-icon mb-3">
+<i class="fa fa-search"></i>
+</div>
+
+<h5>Track FIR</h5>
+<p>Track FIR status anytime</p>
+
+</div>
+</div>
+
+<div class="col-md-3" data-aos="fade-up" data-aos-delay="300">
+<div class="card service-card text-center p-4">
+
+<div class="service-icon mb-3">
+<i class="fa fa-bell"></i>
+</div>
+
+<h5>SOS Alert</h5>
+<p>Emergency alert to police</p>
+
+</div>
+</div>
+
+<div class="col-md-3" data-aos="fade-up" data-aos-delay="400">
+<div class="card service-card text-center p-4">
+
+<div class="service-icon mb-3">
+<i class="fa fa-user-shield"></i>
+</div>
+
+<h5>Secure</h5>
+<p>Secure complaint system</p>
+
+</div>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ABOUT SECTION -->
+<div class="mt-5">
+
+<div class="row align-items-center">
+
+<div class="col-md-6" data-aos="fade-right" data-aos-duration="1000">
+
+<div class="img-hover">
+<img src="https://i.pinimg.com/736x/1d/57/ef/1d57ef8b238a9bc217a720209f0da970.jpg"
+class="img-fluid">
+</div>
+
+</div>
+
+<div class="col-md-6" data-aos="fade-left" data-aos-duration="1000">
+
+<h2>About Online FIR System</h2>
+
+<p>
+This system helps citizens to file FIR online without visiting police station.
+This improves transparency and emergency response time.
+</p>
+
+<ul class="links">
+<li data-aos="fade-left" data-aos-delay="100">Online FIR Filing</li>
+<li data-aos="fade-left" data-aos-delay="200">Emergency SOS</li>
+<li data-aos="fade-left" data-aos-delay="300">Track FIR</li>
+<li data-aos="fade-left" data-aos-delay="400">Secure System</li>
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- FEATURES -->
+<div class="mt-5">
+
+<h2 class="text-center mb-4" data-aos="fade-down">Features</h2>
+
+<div class="row">
+
+<div class="col-md-3" data-aos="zoom-in" data-aos-delay="100">
+<div class="feature-box text-center">
+<h5>Fast Response</h5>
+</div>
+</div>
+
+<div class="col-md-3" data-aos="zoom-in" data-aos-delay="200">
+<div class="feature-box text-center">
+<h5>24/7 Support</h5>
+</div>
+</div>
+
+<div class="col-md-3" data-aos="zoom-in" data-aos-delay="300">
+<div class="feature-box text-center">
+<h5>Secure</h5>
+</div>
+</div>
+
+<div class="col-md-3" data-aos="zoom-in" data-aos-delay="400">
+<div class="feature-box text-center">
+<h5>Easy Access</h5>
+</div>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- EMERGENCY -->
+<div class="mt-5 emergency text-center"
+id="emergency"
+data-aos="zoom-in-up"
+data-aos-duration="1200"
+data-aos-offset="200">
+
+<h2>Emergency Numbers</h2>
+
+<p>
+Police : 100 | Ambulance : 108 | Fire : 101
+</p>
+
+</div>
+
+
+<!-- AOS Script -->
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
+<script>
+AOS.init({
+duration:1000,
+once:false,
+offset:120,
+easing:'ease-in-out'
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+
+.track-container{
+padding:40px 15px;
+}
+
+.track-card{
+max-width:1000px;
+margin:auto;
+background:white;
+border-radius:15px;
+padding:35px;
+box-shadow:0 10px 30px rgba(0,0,0,0.08);
+animation:fadeUp .6s ease;
+}
+
+.track-title{
+text-align:center;
+font-weight:600;
+margin-bottom:30px;
+}
+
+.section-title{
+font-weight:600;
+margin:25px 0 15px 0;
+border-left:4px solid #0d6efd;
+padding-left:10px;
+}
+
+.info-box{
+background:#f8f9fa;
+padding:15px;
+border-radius:10px;
+margin-bottom:15px;
+}
+
+.status-badge{
+padding:6px 12px;
+border-radius:20px;
+font-size:14px;
+font-weight:500;
+}
+
+.status-pending{
+background:#fff3cd;
+color:#856404;
+}
+
+.status-approved{
+background:#d4edda;
+color:#155724;
+}
+
+.status-investigation{
+background:#cce5ff;
+color:#004085;
+}
+
+.status-closed{
+background:#e2e3e5;
+color:#383d41;
+}
+
+.timeline{
+border-left:3px solid #0d6efd;
+padding-left:20px;
+}
+
+.timeline-item{
+margin-bottom:15px;
+}
+
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(30px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+@media(max-width:768px){
+.track-card{
+padding:20px;
+}
+}
+
+</style>
+
+<div class="track-container">
+
+<div class="track-card">
+
+<h4 class="track-title">Track FIR</h4>
+
+<!-- FIR Basic Info -->
+
+<h5 class="section-title">FIR Details</h5>
+
+<div class="row">
+
+<div class="col-md-6">
+<div class="info-box">
+<strong>FIR Number :</strong> {{fir.fir_number}}
+</div>
+</div>
+
+<div class="col-md-6">
+<div class="info-box">
+<strong>Crime Type :</strong> {{fir.crime_type}}
+</div>
+</div>
+
+<div class="col-md-6">
+<div class="info-box">
+<strong>Status :</strong> 
+<span class="status-badge">
+{{fir.status}}
+</span>
+</div>
+</div>
+
+<div class="col-md-6">
+<div class="info-box">
+<strong>Priority :</strong> {{fir.priority}}
+</div>
+</div>
+
+<div class="col-md-6">
+<div class="info-box">
+<strong>Filed On :</strong> {{fir.created_at}}
+</div>
+</div>
+
+<div class="col-md-6">
+<div class="info-box">
+<strong>Last Updated :</strong> {{fir.updated_at}}
+</div>
+</div>
+
+</div>
+
+<!-- Incident Details -->
+
+<h5 class="section-title">Incident Details</h5>
+
+<div class="row">
+
+<div class="col-md-6">
+<div class="info-box">
+<strong>Incident Date :</strong> {{fir.incident_date}}
+</div>
+</div>
+
+<div class="col-md-6">
+<div class="info-box">
+<strong>Incident Time :</strong> {{fir.incident_time}}
+</div>
+</div>
+
+<div class="col-md-6">
+<div class="info-box">
+<strong>Place :</strong> {{fir.incident_place}}
+</div>
+</div>
+
+<div class="col-md-6">
+<div class="info-box">
+<strong>Police Station :</strong> {{fir.police_station}}
+</div>
+</div>
+
+</div>
+
+<!-- Description -->
+
+<h5 class="section-title">Description</h5>
+
+<div class="info-box">
+{{fir.description}}
+</div>
+
+<!-- Suspect Details -->
+
+<h5 class="section-title">Suspect Details</h5>
+
+<div class="row">
+
+<div class="col-md-6">
+<div class="info-box">
+<strong>Suspect Name :</strong> {{fir.suspect_name|default:"Not Available"}}
+</div>
+</div>
+
+<div class="col-md-6">
+<div class="info-box">
+<strong>Suspect Details :</strong> {{fir.suspect_details|default:"Not Available"}}
+</div>
+</div>
+
+</div>
+
+<!-- Evidence -->
+
+<h5 class="section-title">Evidence</h5>
+
+<div class="info-box">
+
+{% if fir.evidence %}
+<a href="{{fir.evidence.url}}" class="btn btn-sm btn-dark" target="_blank">
+View Evidence
+</a>
+{% else %}
+No Evidence Uploaded
+{% endif %}
+
+</div>
+
+<!-- Status Timeline -->
+
+<h5 class="section-title">FIR Progress</h5>
+
+<div class="timeline">
+
+<div class="timeline-item">
+✔ FIR Filed
+</div>
+
+{% if fir.status == "Rejected" %}
+<div class="timeline-item text-danger">
+✖ FIR Rejected
+</div>
+{% endif %}
+
+{% if fir.status == "Approved" or fir.status == "Under Investigation" or fir.status == "Closed" %}
+<div class="timeline-item">
+✔ FIR Approved
+</div>
+{% endif %}
+
+{% if fir.status == "Under Investigation" or fir.status == "Closed" %}
+<div class="timeline-item">
+✔ Under Investigation
+</div>
+{% endif %}
+
+{% if fir.status == "Closed" %}
+<div class="timeline-item">
+✔ Case Closed
+</div>
+{% endif %}
+
+</div>
+
+</div>
+</div>
+
+{% endblock %}

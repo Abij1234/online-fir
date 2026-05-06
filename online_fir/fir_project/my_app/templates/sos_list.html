@@ -1,0 +1,182 @@
+{% extends "policebase.html" %}
+{% load static %}
+
+{% block content %}
+{% if messages %}
+<div class="container mt-3">
+{% for message in messages %}
+<div class="alert alert-{{message.tags}} alert-dismissible fade show">
+{{message}}
+<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{% endfor %}
+</div>
+{% endif %}
+<br>
+
+<div class="container mt-4">
+
+<div class="card shadow">
+
+<div class="card-header bg-danger text-white">
+
+<h4>
+🚨 Live SOS Emergency Alerts
+</h4>
+
+</div>
+
+<div class="card-body">
+
+<table class="table table-bordered table-hover">
+
+<thead class="table-dark">
+
+<tr>
+
+<th>ID</th>
+<th>Name</th>
+<th>Phone</th>
+<th>Message</th>
+<th>Location</th>
+<th>Status</th>
+<th>Time</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for s in sos %}
+
+<tr>
+
+<td>{{s.id}}</td>
+
+<td>{{s.name}}</td>
+
+<td>{{s.phone}}</td>
+
+<td>{{s.message}}</td>
+
+<td>
+
+<a target="_blank"
+class="btn btn-sm btn-info"
+href="https://www.google.com/maps?q={{s.latitude}},{{s.longitude}}">
+
+View Map
+
+</a>
+
+</td>
+
+<td>
+
+<span class="badge bg-danger">
+{{s.status}}
+</span>
+
+</td>
+
+<td>{{s.created_at}}</td>
+
+<td>
+
+<a href="{% url 'update_sos' s.id %}"
+class="btn btn-success btn-sm">
+
+Update
+
+</a>
+
+<a href="{% url 'delete_sos' s.id %}"
+class="btn btn-danger btn-sm">
+
+Delete
+
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+<br>
+<!-- Alert Sound -->
+
+<audio id="alertSound">
+<source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" type="audio/ogg">
+</audio>
+
+<!-- Unlock Audio -->
+
+<script>
+
+document.addEventListener("click", function() {
+
+var sound = document.getElementById("alertSound");
+
+sound.play().then(() => {
+sound.pause();
+sound.currentTime = 0;
+});
+
+}, { once: true });
+
+</script>
+
+<!-- Live SOS Alert -->
+
+<script>
+
+let lastSOS = "{{ sos.first.id|default:0 }}";
+
+setInterval(function(){
+
+fetch(window.location.href)
+
+.then(response => response.text())
+
+.then(data => {
+
+let parser = new DOMParser();
+let doc = parser.parseFromString(data, "text/html");
+
+let firstRow = doc.querySelector("tbody tr td");
+
+if(firstRow){
+
+let newSOS = firstRow.innerText;
+
+if(newSOS != lastSOS){
+
+document.getElementById("alertSound").play();
+
+setTimeout(function(){
+location.reload();
+},1000);
+
+}
+
+}
+
+});
+
+},5000);
+
+</script>
+
+{% endblock %}

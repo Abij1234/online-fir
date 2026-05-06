@@ -1,0 +1,221 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<!-- Page Title -->
+<div class="row mb-3">
+    <div class="col-md-12">
+        <h3 class="fw-bold">FIR Details</h3>
+        <hr>
+    </div>
+</div>
+
+<!-- FIR Main Card -->
+<div class="card shadow-lg border-0 mb-4">
+
+    <div class="card-header bg-dark text-white">
+        <h5 class="mb-0">FIR Information</h5>
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-6">
+
+                <p><strong>FIR ID :</strong> {{fir.id}}</p>
+                <p><strong>FIR Number :</strong> {{fir.fir_number}}</p>
+                <p><strong>Category :</strong> {{fir.category}}</p>
+                <p><strong>Status :</strong> 
+                    <span class="badge bg-warning text-dark">
+                        {{fir.status}}
+                    </span>
+                </p>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <p><strong>Police Station :</strong> {{fir.police_station}}</p>
+                <p><strong>Assigned Officer :</strong> {{fir.assigned_officer}}</p>
+                <p><strong>Created Date :</strong> {{fir.created_at}}</p>
+                <p><strong>Last Updated :</strong> {{fir.updated_at}}</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Complainant Details -->
+
+<div class="card shadow-lg border-0 mb-4">
+
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Complainant Details</h5>
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-6">
+
+                <p><strong>Name :</strong> {{fir.name}}</p>
+                <p><strong>Email :</strong> {{fir.email}}</p>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <p><strong>Phone :</strong> {{fir.phone}}</p>
+                <p><strong>Address :</strong> {{fir.address}}</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Incident Details -->
+
+<div class="card shadow-lg border-0 mb-4">
+
+    <div class="card-header bg-warning">
+        <h5 class="mb-0">Incident Details</h5>
+    </div>
+
+    <div class="card-body">
+
+        <p><strong>Incident Date :</strong> {{fir.incident_date}}</p>
+        <p><strong>Location :</strong> {{fir.incident_place}}</p>
+
+        <hr>
+
+        <h6>Description</h6>
+
+        <div class="alert alert-light border">
+            {{fir.description}}
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Evidence Section -->
+
+<div class="card shadow-lg border-0 mb-4">
+
+    <div class="card-header bg-danger text-white">
+        <h5 class="mb-0">Evidence Files</h5>
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            {% for evidence in evidences %}
+
+            <div class="col-md-3 mb-3">
+
+                <div class="card">
+
+                    <img src="{{ evidence.file.url }}" class="card-img-top" style="height:200px; object-fit:cover;">
+
+                    <div class="card-body text-center">
+
+                        <a href="{{ evidence.file.url }}" target="_blank" class="btn btn-sm btn-primary">
+                            View
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <p>No evidence uploaded</p>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Timeline Section -->
+
+<div class="card shadow-lg border-0">
+
+    <div class="card-header bg-success text-white">
+        <h5 class="mb-0">FIR Timeline</h5>
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-bordered table-hover">
+
+            <thead class="table-dark">
+                <tr>
+                    <th>Status</th>
+                    <th>Updated By</th>
+                    <th>Note</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for i in timeline %}
+
+                <tr>
+
+                    <td>
+                        <span class="badge bg-info">
+                            {{i.status}}
+                        </span>
+                    </td>
+
+                    <td>{{i.updated_by}}</td>
+                    <td>{{i.note}}</td>
+                    <td>{{i.created_at}}</td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<!-- Back Button -->
+
+<div class="mt-3">
+
+    <a href="{% url 'policedashboard' %}" class="btn btn-secondary">
+        Back to Dashboard
+    </a>
+
+</div>
+<br>
+<br>
+
+</div>
+
+{% endblock %}

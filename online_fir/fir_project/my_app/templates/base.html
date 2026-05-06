@@ -1,0 +1,500 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Online FIR System</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+
+html, body{
+height:100%;
+}
+
+body{
+background-color:#f5f7fa;
+display:flex;
+flex-direction:column;
+}
+
+/* Content Wrapper */
+
+.content-wrapper{
+flex:1;
+}
+
+/* Navbar */
+
+.navbar{
+background:#0b3d91;
+}
+
+.navbar-brand{
+font-weight:bold;
+color:white !important;
+}
+
+.nav-link{
+color:white !important;
+font-weight:500;
+transition: all 0.3s ease;
+display:inline-block;
+}
+
+.nav-link:hover{
+color:#ffc107 !important;
+transform: scale(1.12);
+}
+
+/* SOS Button */
+
+.sos-btn{
+background:#dc3545;
+color:white;
+font-weight:bold;
+border-radius:30px;
+padding:8px 18px;
+}
+
+.sos-btn:hover{
+background:#bb2d3b;
+color:white;
+}
+
+/* Footer */
+
+footer{
+background:#0b3d91;
+color:white;
+margin-top:auto;
+width:100%;
+}
+
+footer a{
+color:#ffc107;
+text-decoration:none;
+}
+
+footer a:hover{
+text-decoration:underline;
+}
+
+/* Username dropdown */
+
+.user-menu{
+position:relative;
+list-style:none;
+}
+
+.user-btn{
+background:#0b3d91;
+color:white;
+padding:7px 18px;
+border-radius:25px;
+border:none;
+cursor:pointer;
+font-weight:500;
+transition:0.3s;
+display:flex;
+align-items:center;
+gap:8px;
+}
+
+.user-btn:hover{
+background:#062c6a;
+transform:translateY(-1px);
+}
+
+.user-dropdown{
+position:absolute;
+top:120%;
+right:0;
+background:white;
+border-radius:12px;
+box-shadow:0 10px 30px rgba(0,0,0,0.15);
+min-width:180px;
+opacity:0;
+visibility:hidden;
+transform:translateY(10px);
+transition:0.3s;
+z-index:1000;
+}
+
+.user-dropdown.show{
+opacity:1;
+visibility:visible;
+transform:translateY(0);
+}
+
+.user-dropdown a{
+display:block;
+padding:12px 18px;
+text-decoration:none;
+color:#333;
+transition:0.3s;
+}
+
+.user-dropdown a:hover{
+background:#f5f7fb;
+padding-left:22px;
+}
+
+.dropdown-divider{
+height:1px;
+background:#eee;
+margin:5px 0;
+}
+
+    </style>
+
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar navbar-expand-lg navbar-dark shadow">
+<div class="container">
+
+<a class="navbar-brand" href="/">
+🚔 Online FIR System
+</a>
+
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+data-bs-target="#navbarNav">
+
+<span class="navbar-toggler-icon"></span>
+
+</button>
+
+<div class="collapse navbar-collapse" id="navbarNav">
+
+<ul class="navbar-nav ms-auto">
+
+<li class="nav-item">
+<a class="nav-link" href="/">
+<i class="fa fa-home"></i> Home
+</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link" href="{% url 'filefir' %}">
+<i class="fa fa-file"></i> File complaint
+</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link" href="{% url 'trackfirlist' %}">
+<i class="fa fa-search"></i> Track FIR
+</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link" href="#emergency">
+<i class="fa fa-phone"></i> Contact
+</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link" href="{% url "donation" %}">
+<i class="fa-solid fa-circle-dollar-to-slot"></i> Charity Donate
+</a>
+</li>
+
+{% if user.is_authenticated %}
+
+<li class="user-menu">
+
+<button class="user-btn" onclick="toggleDropdown()">
+
+{{ request.user.first_name }}
+
+<i class="fa fa-angle-down"></i>
+
+</button>
+
+<div class="user-dropdown" id="userDropdown">
+
+<a href="{% url 'profile' %}">Profile</a>
+
+<div class="dropdown-divider"></div>
+
+<a href="{% url 'logoutt' %}">Logout</a>
+
+</div>
+
+</li>
+
+{% else %}
+
+<li class="nav-item">
+<a class="nav-link" href="{% url 'loginn' %}">
+Login
+</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link" href="{% url 'register' %}">
+Register
+</a>
+</li>
+
+{% endif %}
+
+<li class="nav-item ms-2">
+<a href="#" class="btn sos-btn"
+data-bs-toggle="modal"
+data-bs-target="#sosModal">
+🚨 SOS
+</a>
+</li>
+
+</ul>
+
+</div>
+
+</div>
+</nav>
+
+<!-- ================= CONTENT ================= -->
+ <!-- SOS Modal -->
+
+<div class="modal fade" id="sosModal" tabindex="-1">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+
+<div class="modal-header bg-danger text-white">
+<h5 class="modal-title">
+🚨 Emergency SOS
+</h5>
+
+<button type="button" class="btn-close btn-close-white"
+data-bs-dismiss="modal"></button>
+
+</div>
+
+<div class="modal-body">
+
+<form id="sosForm">
+{% csrf_token %}
+<div class="mb-3">
+<label>Your Name</label>
+<input type="text" class="form-control" id="sos_name" required>
+</div>
+
+<div class="mb-3">
+<label>Phone Number</label>
+<input type="text" class="form-control" id="sos_phone" required>
+</div>
+
+
+<div class="mb-3">
+<label>Emergency Message</label>
+<textarea class="form-control"
+id="sos_message"></textarea>
+</div>
+
+<button type="button"
+class="btn btn-danger w-100"
+onclick="sendSOS()">
+
+🚨 Send Emergency SOS
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+</div>
+</div>
+
+<div class="content-wrapper">
+
+<div class="container mt-4">
+
+{% block content %}
+{% endblock %}
+
+</div>
+
+</div>
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="pt-4 pb-3">
+
+<div class="container">
+
+<div class="row">
+
+<div class="col-md-4">
+<h5>Online FIR System</h5>
+<p>
+Digital Police FIR registration and Emergency alert system 
+for faster response and safer community.
+</p>
+</div>
+
+<div class="col-md-4">
+<h5>Quick Links</h5>
+
+<ul class="list-unstyled">
+
+<li><a href="#">Home</a></li>
+<li><a href="{% url "filefir" %}">File FIR</a></li>
+<li><a href="#">Contact</a></li>
+<li><a href="{% url "donation" %}">Charity Donate</a></li>
+
+</ul>
+
+</div>
+
+<div class="col-md-4">
+<h5>Emergency Contact</h5>
+
+<p>
+🚨 Police : 100 <br>
+🚑 Ambulance : 108 <br>
+🔥 Fire : 101
+</p>
+
+</div>
+
+</div>
+
+<hr>
+
+<div class="text-center">
+
+<p class="mb-0">
+© 2026 Online FIR System
+</p>
+
+</div>
+
+</div>
+
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+function toggleDropdown(){
+document.getElementById("userDropdown").classList.toggle("show");
+}
+
+function getCSRFToken() {
+    return document.querySelector('[name=csrfmiddlewaretoken]').value;
+}
+
+window.onclick = function(e){
+if (!e.target.closest('.user-menu')){
+document.getElementById("userDropdown").classList.remove("show");
+}
+}
+
+
+function sendSOS(){
+
+var btn = event.target;
+btn.innerHTML = "Sending...";
+btn.disabled = true;
+
+var name = document.getElementById("sos_name").value;
+var phone = document.getElementById("sos_phone").value;
+var message = document.getElementById("sos_message").value;
+
+if(name == "" || phone == ""){
+alert("Please fill required fields");
+btn.innerHTML = "🚨 Send Emergency SOS";
+btn.disabled = false;
+return;
+}
+
+// Faster GPS settings
+navigator.geolocation.getCurrentPosition(
+
+function(position){
+
+var latitude = position.coords.latitude;
+var longitude = position.coords.longitude;
+
+sendSOSData(name, phone, message, latitude, longitude, btn);
+
+},
+
+function(error){
+
+// If GPS fails send without location
+sendSOSData(name, phone, message, "", "", btn);
+
+},
+
+{
+enableHighAccuracy:false,
+timeout:5000,
+maximumAge:60000
+}
+
+);
+
+}
+
+
+// Send data function
+function sendSOSData(name, phone, message, latitude, longitude, btn){
+
+fetch("/send-sos/",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json",
+"X-CSRFToken": getCSRFToken()
+},
+
+body:JSON.stringify({
+
+name:name,
+phone:phone,
+message:message,
+latitude:latitude,
+longitude:longitude
+})
+
+})
+.then(response=>response.json())
+.then(data=>{
+
+alert("SOS Sent Successfully 🚨");
+
+location.reload();
+
+})
+.catch(error=>{
+
+alert("Error sending SOS");
+
+btn.innerHTML = "🚨 Send Emergency SOS";
+btn.disabled = false;
+
+});
+
+}
+
+</script>
+
+</body>
+</html>

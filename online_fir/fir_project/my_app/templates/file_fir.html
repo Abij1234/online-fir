@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+
+.fir-container{
+    padding:40px 15px;
+    min-height:90vh;
+}
+
+.fir-card{
+    max-width:1000px;
+    margin:auto;
+    border:none;
+    border-radius:15px;
+    box-shadow:0 10px 35px rgba(0,0,0,0.08);
+    padding:35px;
+    background:white;
+}
+
+.fir-title{
+    text-align:center;
+    font-weight:600;
+    margin-bottom:30px;
+}
+
+.section-title{
+    font-weight:600;
+    margin:25px 0 15px 0;
+    border-left:4px solid #0d6efd;
+    padding-left:10px;
+}
+
+.error{
+    color:red;
+    font-size:13px;
+}
+
+</style>
+
+<div class="fir-container">
+<div class="fir-card">
+
+<h4 class="fir-title">File Online complaint</h4>
+
+<form method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+{% csrf_token %}
+
+<!-- Complainant Details -->
+<h5 class="section-title">Complainant Details</h5>
+
+<div class="row">
+
+<div class="col-md-6 mb-3">
+<label>Full Name</label>
+<input type="text" value="{{fill.name}}" name="name" id="name" class="form-control">
+<div class="error" id="nameError"></div>
+</div>
+
+<div class="col-md-6 mb-3">
+<label>Phone</label>
+<input type="text" value="{{fill.phone}}" name="phone" id="phone" class="form-control">
+<div class="error" id="phoneError"></div>
+</div>
+
+<div class="col-md-6 mb-3">
+<label>Email</label>
+<input type="email" value="{{fill.email}}" name="email" id="email" class="form-control">
+<div class="error" id="emailError"></div>
+</div>
+
+<div class="col-md-6 mb-3">
+<label>District</label>
+<input type="text" name="district" id="district" class="form-control">
+<div class="error" id="districtError"></div>
+</div>
+
+<div class="col-md-6 mb-3">
+<label>State</label>
+<input type="text" name="state" id="state" class="form-control">
+<div class="error" id="stateError"></div>
+</div>
+
+<div class="col-md-6 mb-3">
+<label>Pincode</label>
+<input type="text" name="pincode" id="pincode" class="form-control">
+<div class="error" id="pincodeError"></div>
+</div>
+
+<div class="col-md-12 mb-3">
+<label>Address</label>
+<textarea name="address" id="address" class="form-control">{{fill.address}}</textarea>
+<div class="error" id="addressError"></div>
+</div>
+
+</div>
+
+<!-- Incident Details -->
+<h5 class="section-title">Incident Details</h5>
+
+<div class="row">
+
+<div class="col-md-6 mb-3">
+<label>Crime Type</label>
+<select name="crime_type" id="crime_type" class="form-select">
+<option value="">Select Crime</option>
+<option>Theft</option>
+<option>Robbery</option>
+<option>Missing Person</option>
+<option>Cyber Crime</option>
+<option>Assault</option>
+<option>Domestic Violence</option>
+<option>Harassment</option>
+<option>Accident</option>
+<option>Fraud</option>
+<option>Kidnapping</option>
+<option>Murder</option>
+<option>Sexual Harassment</option>
+<option>Other</option>
+</select>
+<div class="error" id="crimeError"></div>
+</div>
+
+<div class="col-md-3 mb-3">
+<label>Date</label>
+<input type="date" name="incident_date" id="date" class="form-control">
+<div class="error" id="dateError"></div>
+</div>
+
+<div class="col-md-3 mb-3">
+<label>Time</label>
+<input type="time" name="incident_time" id="time" class="form-control">
+<div class="error" id="timeError"></div>
+</div>
+
+<div class="col-md-6 mb-3">
+<label>Place of Incident</label>
+<input type="text" name="incident_place" id="place" class="form-control">
+<div class="error" id="placeError"></div>
+</div>
+
+<div class="col-md-6 mb-3">
+<label>Police Station</label>
+<input type="text" name="police_station" id="station" class="form-control">
+<div class="error" id="stationError"></div>
+</div>
+
+</div>
+
+<!-- Description -->
+<h5 class="section-title">Incident Description</h5>
+
+<div class="mb-3">
+<label>Describe the incident</label>
+<textarea name="description" id="description" rows="4" class="form-control"></textarea>
+<div class="error" id="descError"></div>
+</div>
+
+<!-- Evidence -->
+<h5 class="section-title">Upload Evidence</h5>
+
+<input type="file" id="evidence" name="evidence" class="form-control" multiple>
+<div class="error" id="fileError"></div>
+
+<br>
+
+<div class="form-check mb-3">
+<input class="form-check-input" type="checkbox" id="agree">
+<label class="form-check-label">
+I confirm that the information provided is true
+</label>
+<div class="error" id="agreeError"></div>
+</div>
+
+<button type="submit" class="btn btn-dark w-100">
+Submit FIR
+</button>
+
+</form>
+
+</div>
+</div>
+
+<script>
+
+function validateForm(){
+
+let valid = true;
+
+function setError(id,msg){
+document.getElementById(id).innerText=msg;
+valid=false;
+}
+
+function clear(){
+document.querySelectorAll(".error").forEach(e=>e.innerText="")
+}
+
+clear()
+
+let name=document.getElementById("name").value.trim()
+let phone=document.getElementById("phone").value.trim()
+let email=document.getElementById("email").value.trim()
+let pincode=document.getElementById("pincode").value.trim()
+let desc=document.getElementById("description").value.trim()
+let date=document.getElementById("date").value
+
+// name
+if(!/^[A-Za-z ]+$/.test(name))
+setError("nameError","Enter valid name")
+
+// phone
+if(!/^[0-9]{10}$/.test(phone))
+setError("phoneError","Enter valid 10 digit number")
+
+// email
+let mail=/^\S+@\S+\.\S+$/
+if(!mail.test(email))
+setError("emailError","Invalid Email")
+
+// pincode
+if(!/^[0-9]{6}$/.test(pincode))
+setError("pincodeError","Invalid Pincode")
+
+// description
+if(desc.length<20)
+setError("descError","Minimum 20 characters")
+
+// date
+let today=new Date().toISOString().split("T")[0]
+if(date>today)
+setError("dateError","Future date not allowed")
+
+// checkbox
+if(!document.getElementById("agree").checked)
+setError("agreeError","Please confirm")
+
+return valid
+}
+
+</script>
+
+{% endblock %}

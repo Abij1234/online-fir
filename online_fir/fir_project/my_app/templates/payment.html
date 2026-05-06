@@ -1,0 +1,39 @@
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<button id="pay-btn">Pay</button>
+
+<script>
+
+var options = {
+    "key": "{{key}}",
+    "amount": "{{payment.amount}}",
+    "currency": "INR",
+    "name": "Police Charity",
+    "description": "Donation",
+    "order_id": "{{payment.id}}",
+
+    "handler": function (response){
+
+        var form = document.createElement("form");
+        form.method = "POST";
+        form.action = "/success/";
+
+        var input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "razorpay_payment_id";
+        input.value = response.razorpay_payment_id;
+
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
+    }
+};
+
+var rzp = new Razorpay(options);
+
+document.getElementById('pay-btn').onclick = function(e){
+    rzp.open();
+    e.preventDefault();
+}
+
+</script>

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h4 class="mb-4">Your FIR Reports</h4>
+
+<table class="table table-bordered table-hover">
+
+<thead class="table-dark">
+<tr>
+<th>FIR ID</th>
+<th>Crime Type</th>
+<th>Status</th>
+<th>Date</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for fir in firs %}
+
+<tr>
+
+<td>{{fir.id}}</td>
+<td>{{fir.crime_type}}</td>
+<td>{{fir.status}}</td>
+<td>{{fir.created_at}}</td>
+
+<td>
+<a href="{% url 'trackfir' fir.id %}" 
+class="btn btn-sm btn-primary">
+Track
+</a>
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% endblock %}

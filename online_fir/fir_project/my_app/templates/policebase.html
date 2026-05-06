@@ -1,0 +1,219 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Police Dashboard</title>
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+html,body{
+height:100%;
+}
+
+body{
+display:flex;
+flex-direction:column;
+background:#f5f7fa;
+}
+
+.content-wrapper{
+flex:1;
+}
+
+/* Navbar */
+
+.navbar{
+background:#0b3d91;
+}
+
+.navbar-brand{
+color:white !important;
+font-weight:bold;
+}
+
+.nav-link{
+color:white !important;
+font-weight:500;
+transition:0.3s;
+}
+
+.nav-link:hover{
+color:#ffc107 !important;
+transform:scale(1.05);
+}
+
+/* Police Info */
+
+.police-info{
+color:white;
+font-size:14px;
+margin-right:15px;
+}
+
+/* Footer */
+
+footer{
+background:#0b3d91;
+color:white;
+}
+
+footer a{
+color:#ffc107;
+text-decoration:none;
+}
+
+footer a:hover{
+text-decoration:underline;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav class="navbar navbar-expand-lg navbar-dark shadow">
+
+<div class="container">
+
+<a class="navbar-brand" href="#">
+🚔 Police Dashboard
+</a>
+
+<button class="navbar-toggler" type="button"
+data-bs-toggle="collapse"
+data-bs-target="#navbarNav">
+
+<span class="navbar-toggler-icon"></span>
+
+</button>
+
+<div class="collapse navbar-collapse" id="navbarNav">
+
+<ul class="navbar-nav ms-auto align-items-center">
+
+<li class="nav-item">
+<a class="nav-link" href="#">
+<i class="fa fa-home"></i> Home
+</a>
+</li>
+
+
+<li class="nav-item">
+<a class="nav-link" href="{% url "sos_list" %}">
+sos list
+</a>
+</li>
+
+<!-- Police Info -->
+
+<li class="nav-item police-info">
+
+👮 {{request.user.first_name}}
+
+</li>
+
+<li class="nav-item police-info">
+
+🎖 Badge : {{police.badge_id}}
+
+</li>
+
+<li class="nav-item police-info">
+
+🏢 {{police.station}}
+
+</li>
+
+<li class="nav-item">
+
+<a class="nav-link" href="{% url 'policelogout' %}">
+<i class="fa fa-sign-out"></i> Logout
+</a>
+
+</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</nav>
+
+
+<!-- CONTENT -->
+
+<div class="container mt-4 content-wrapper">
+
+{% block content %}
+
+{% endblock %}
+
+</div>
+
+
+<!-- FOOTER -->
+
+<footer class="pt-4 pb-3">
+
+<div class="container">
+
+<div class="row">
+
+<div class="col-md-4">
+<h5>Online FIR System</h5>
+<p>
+Digital Police FIR registration and Emergency alert system 
+for faster response and safer community.
+</p>
+</div>
+
+
+
+<div class="col-md-4">
+
+<h5>Emergency Contact</h5>
+
+<p>
+🚨 Police : 100 <br>
+🚑 Ambulance : 108 <br>
+🔥 Fire : 101
+</p>
+
+</div>
+
+</div>
+
+<hr>
+
+<div class="text-center">
+
+<p class="mb-0">
+© 2026 Online FIR System
+</p>
+
+</div>
+
+</div>
+
+</footer>
+
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

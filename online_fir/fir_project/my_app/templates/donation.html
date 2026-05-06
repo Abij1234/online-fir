@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+
+body{
+background:linear-gradient(135deg,#eef2f7,#dce7f5);
+}
+
+/* Hero Section */
+
+.donation-hero{
+text-align:center;
+padding:40px 20px 10px;
+}
+
+.donation-hero h2{
+font-weight:700;
+color:#1c2b4a;
+}
+
+.donation-hero p{
+color:#6c757d;
+margin-top:10px;
+}
+
+/* Card */
+
+.donation-container{
+min-height:80vh;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:20px;
+}
+
+.donation-card{
+max-width:520px;
+width:100%;
+background:white;
+padding:35px;
+border-radius:20px;
+box-shadow:0 15px 45px rgba(0,0,0,0.08);
+animation:fadeUp .7s ease;
+}
+
+/* Quick Amount */
+
+.quick-amount{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-bottom:15px;
+}
+
+.quick-amount button{
+flex:1;
+border:none;
+padding:10px;
+border-radius:10px;
+background:#f1f4f9;
+transition:.3s;
+font-weight:500;
+}
+
+.quick-amount button:hover{
+background:black;
+color:white;
+}
+
+/* Inputs */
+
+.form-control{
+border-radius:12px;
+padding:12px;
+}
+
+.form-control:focus{
+box-shadow:0 0 0 3px rgba(13,110,253,0.15);
+}
+
+/* Donate Button */
+
+.donate-btn{
+padding:13px;
+border-radius:12px;
+font-weight:600;
+transition:.3s;
+}
+
+.donate-btn:hover{
+transform:translateY(-2px);
+}
+
+/* Footer text */
+
+.support-text{
+text-align:center;
+margin-top:15px;
+font-size:14px;
+color:#6c757d;
+}
+
+/* Animation */
+
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(40px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* Mobile */
+
+@media(max-width:576px){
+
+.donation-card{
+padding:25px 20px;
+}
+
+}
+
+</style>
+
+
+<!-- Hero -->
+
+<div class="donation-hero">
+<h2>Support Police Charity ❤️</h2>
+<p>Your donation helps protect and serve communities</p>
+</div>
+
+
+<div class="donation-container">
+
+<div class="donation-card">
+
+{% if error %}
+<div class="alert alert-danger">
+{{error}}
+</div>
+{% endif %}
+
+<form method="POST">
+{% csrf_token %}
+
+<div class="mb-3">
+<label>Name</label>
+<input type="text" name="name" class="form-control" required>
+</div>
+
+<div class="mb-3">
+<label>Email</label>
+<input type="email" name="email" class="form-control" required>
+</div>
+
+<label>Select Amount</label>
+
+<div class="quick-amount">
+
+<button type="button" onclick="setAmount(50)">₹50</button>
+<button type="button" onclick="setAmount(100)">₹100</button>
+<button type="button" onclick="setAmount(500)">₹500</button>
+<button type="button" onclick="setAmount(1000)">₹1000</button>
+
+</div>
+
+<div class="mb-3">
+<input type="number" name="amount" id="amount" min="50"
+placeholder="Enter Amount (Min ₹50)" class="form-control" required>
+</div>
+
+<button class="btn btn-dark w-100 donate-btn">
+Donate Securely 💳
+</button>
+
+<div class="support-text">
+🔒 100% Secure Payment • Razorpay Protected
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<script>
+
+function setAmount(val){
+document.getElementById("amount").value = val;
+}
+
+</script>
+
+
+<!-- Razorpay -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+{% if payment %}
+
+<script>
+
+var options = {
+    "key": "{{key}}",
+    "amount": "{{payment.amount}}",
+    "currency": "INR",
+    "name": "Police Charity",
+    "description": "Donation",
+    "order_id": "{{payment.id}}",
+
+    "handler": function (response){
+
+        var form = document.createElement("form");
+        form.method = "POST";
+        form.action = "/success/";
+
+        var input1 = document.createElement("input");
+        input1.type = "hidden";
+        input1.name = "razorpay_payment_id";
+        input1.value = response.razorpay_payment_id;
+
+        var input2 = document.createElement("input");
+        input2.type = "hidden";
+        input2.name = "razorpay_order_id";
+        input2.value = response.razorpay_order_id;
+
+        form.appendChild(input1);
+        form.appendChild(input2);
+
+        document.body.appendChild(form);
+        form.submit();
+    },
+
+    "theme": {
+        "color": "#000000"
+    }
+
+};
+
+var rzp = new Razorpay(options);
+rzp.open();
+
+</script>
+
+{% endif %}
+
+{% endblock %}

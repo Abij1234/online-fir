@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+
+.register-container{
+    min-height:90vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:40px 15px;
+}
+
+.register-card{
+    width:100%;
+    max-width:550px;
+    border:none;
+    border-radius:18px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.08);
+    padding:35px;
+    background:#fff;
+    animation:fadeUp 0.7s ease;
+}
+
+.register-title{
+    text-align:center;
+    font-weight:600;
+    margin-bottom:25px;
+    letter-spacing:.5px;
+}
+
+.form-control{
+    border-radius:12px;
+    padding:12px;
+    transition:0.3s;
+}
+
+.form-control:focus{
+    box-shadow:0 0 0 3px rgba(13,110,253,0.15);
+    border-color:#0d6efd;
+}
+
+.register-btn{
+    width:100%;
+    padding:12px;
+    border-radius:12px;
+    font-weight:500;
+    transition:0.3s;
+}
+
+.register-btn:hover{
+    transform:translateY(-2px);
+}
+
+.register-footer{
+    text-align:center;
+    margin-top:15px;
+}
+
+.register-footer a{
+    text-decoration:none;
+    font-weight:500;
+}
+
+@keyframes fadeUp{
+    from{
+        opacity:0;
+        transform:translateY(40px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+@media(max-width:576px){
+
+.register-card{
+    padding:25px 18px;
+}
+
+}
+
+</style>
+{% for i in messages %}
+<script>alert('{{i}}')</script>
+{% endfor %}
+<div class="register-container">
+
+<div class="register-card">
+
+<h4 class="register-title">Police Registration</h4>
+
+<form method="POST" onsubmit="return validatePoliceForm()">
+{% csrf_token %}
+
+<div class="mb-3">
+<label class="form-label">Full Name</label>
+<input type="text" name="name" id="name" class="form-control" required>
+<small id="name_error" class="text-danger"></small>
+</div>
+
+<div class="mb-3">
+<label class="form-label">Email</label>
+<input type="email" name="email" id="email" class="form-control" required>
+<small id="email_error" class="text-danger"></small>
+</div>
+
+<div class="mb-3">
+<label class="form-label">Phone Number</label>
+<input type="text" name="phone" id="phone" class="form-control" required>
+<small id="phone_error" class="text-danger"></small>
+</div>
+
+<div class="mb-3">
+<label class="form-label">Police Station</label>
+<input type="text" name="station" id="station" class="form-control" required>
+<small id="station_error" class="text-danger"></small>
+</div>
+
+<div class="mb-3">
+<label class="form-label">District</label>
+<input type="text" name="district" id="district" class="form-control" required>
+<small id="district_error" class="text-danger"></small>
+</div>
+
+<div class="mb-3">
+<label class="form-label">Password</label>
+<input type="password" name="password" id="password" class="form-control" required>
+<small id="password_error" class="text-danger"></small>
+</div>
+
+<div class="mb-3">
+<label class="form-label">Confirm Password</label>
+<input type="password" name="confirm_password" id="confirm_password" class="form-control" required>
+<small id="confirm_error" class="text-danger"></small>
+</div>
+
+<button type="submit" class="btn btn-dark register-btn">
+Register
+</button>
+
+<div class="register-footer">
+Already Registered?  
+<a href="{% url 'loginn' %}">Login</a>
+</div>
+
+</form>
+
+</div>
+
+</div>
+<script>
+
+function validatePoliceForm(){
+
+let name = document.getElementById("name").value;
+let email = document.getElementById("email").value;
+let phone = document.getElementById("phone").value;
+let station = document.getElementById("station").value;
+let district = document.getElementById("district").value;
+let password = document.getElementById("password").value;
+let confirm = document.getElementById("confirm_password").value;
+
+let valid = true;
+
+// Clear Errors
+
+document.getElementById("name_error").innerHTML="";
+document.getElementById("email_error").innerHTML="";
+document.getElementById("phone_error").innerHTML="";
+document.getElementById("station_error").innerHTML="";
+document.getElementById("district_error").innerHTML="";
+document.getElementById("password_error").innerHTML="";
+document.getElementById("confirm_error").innerHTML="";
+
+
+// Name Validation
+
+let namePattern = /^[A-Za-z ]+$/;
+
+if(!namePattern.test(name)){
+document.getElementById("name_error").innerHTML="Name should contain letters only";
+valid = false;
+}
+
+
+// Email Validation
+
+let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+
+if(!emailPattern.test(email)){
+document.getElementById("email_error").innerHTML="Enter valid email";
+valid = false;
+}
+
+
+// Phone Validation
+
+let phonePattern = /^[0-9]{10}$/;
+
+if(!phonePattern.test(phone)){
+document.getElementById("phone_error").innerHTML="Phone must be 10 digits";
+valid = false;
+}
+
+
+// Station Validation
+
+let stationPattern = /^[A-Za-z ]+$/;
+
+if(!stationPattern.test(station)){
+document.getElementById("station_error").innerHTML="Enter valid station name";
+valid = false;
+}
+
+
+// District Validation
+
+let districtPattern = /^[A-Za-z ]+$/;
+
+if(!districtPattern.test(district)){
+document.getElementById("district_error").innerHTML="Enter valid district";
+valid = false;
+}
+
+
+// Password Validation
+
+let passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+
+if(!passwordPattern.test(password)){
+document.getElementById("password_error").innerHTML=
+"Password must be 8 characters with uppercase, lowercase, number & special char";
+valid = false;
+}
+
+
+// Confirm Password
+
+if(password !== confirm){
+document.getElementById("confirm_error").innerHTML="Passwords do not match";
+valid = false;
+}
+
+return valid;
+
+}
+
+</script>
+{% endblock %}
